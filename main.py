@@ -23,14 +23,18 @@ def main():
 
     for private_key in private_keys:
         client = Client(private_key)
-        logger.info(f"{client.address} start")
-        if client.is_minted():
-            logger.info(f"{client.address} already minted")
-            client.write_result()
-            continue
+        try:
+            logger.info(f"{client.address} start")
+            if client.is_minted():
+                logger.info(f"{client.address} already minted")
+                client.write_result()
+                continue
 
-        if client.mint_nft():
-            client.write_result()
+            if client.mint_nft():
+                client.write_result()
+                time.sleep(random.randint(*pause))
+        except Exception as ex:
+            logger.error(f"{client.address} error {ex}")
             time.sleep(random.randint(*pause))
 
 
