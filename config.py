@@ -1,6 +1,6 @@
 from loguru import logger
 
-logger.add("logs.log", level="DEBUG", rotation="10 MB", compression="zip")
+logger.add("data/logs.log", level="DEBUG", rotation="10 MB", compression="zip")
 
 # адрес rpc ноды сеть Linea, можно не менять
 RPC = "https://1rpc.io/linea"
@@ -9,7 +9,7 @@ RPC = "https://1rpc.io/linea"
 pause = [100, 200]
 
 # ОБЯЗАТЕЛЬНО апи ключ регается тут https://lineascan.build/myapikey
-etherscan_api_key = ""
+lineascan_api_key = ""
 
 # перемешивать кошельки?
 is_shuffle_wallets = False  # True если перемешивать
@@ -17,3 +17,8 @@ is_shuffle_wallets = False  # True если перемешивать
 # проверять баланс?
 is_check_balance = False  # True если проверять баланс
 min_balance = 0.1  # минимальный баланс для проверки
+
+# коэффициент надбавки рандомного газа, указывай 2 числа от 1 до 2
+gas_coef = [1.1, 1.3]
+
+

@@ -1,21 +1,28 @@
 import random
 import time
 
-from web3 import Web3
-
 from config import *
 from classes import Client
 
 
 def main():
-    private_keys = Client.get_private_keys()
+    private_keys = Client.get_list_from_file("data/private_keys.txt")
+    urls = Client.get_list_from_file("data/urls.txt")
+
+    if not urls:
+        logger.error("No urls found")
+        return
 
     if not private_keys:
         logger.error("No private keys found")
         return
 
-    if not etherscan_api_key:
+    if not lineascan_api_key:
         logger.error("No etherscan api key found")
+        return
+
+    if len(private_keys) > len(urls):
+        logger.error("Добавьте больше ссылок на картинки")
         return
 
     if is_shuffle_wallets:
@@ -32,10 +39,11 @@ def main():
 
             if client.mint_nft():
                 client.write_result()
-                time.sleep(random.randint(*pause))
+
         except Exception as ex:
             logger.error(f"{client.address} error {ex}")
-            time.sleep(random.randint(*pause))
+
+        time.sleep(random.randint(*pause))
 
 
 if __name__ == '__main__':
