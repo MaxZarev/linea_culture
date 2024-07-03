@@ -107,10 +107,10 @@ class Client:
                f"?module=account"
                f"&action=txlist"
                f"&address={self.address}"
-               f"&startblock=0"
+               f"&startblock=6084611"
                f"&endblock=99999999"
                f"&page=1"
-               f"&offset=100"
+               f"&offset=10000"
                f"&sort=asc"
                f"&apikey={lineascan_api_key}")
         response = requests.get(url)
