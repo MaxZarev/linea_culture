@@ -1,8 +1,10 @@
+import os.path
+
 from loguru import logger
 
-logger.add("data/logs.log", level="DEBUG", rotation="10 MB", compression="zip")
+logger.add(os.path.join("data", "logs.log"), level="DEBUG", rotation="10 MB", compression="zip")
 
-# адрес rpc ноды сеть Linea, можно не менять
+# адрес rpc ноды сеть Linea, зависит стабильность работы
 RPC = "https://1rpc.io/linea"
 
 # пауза между кошельками в секундах от и до, можно не менять
@@ -18,7 +20,7 @@ is_shuffle_wallets = False  # True если перемешивать
 is_check_balance = False  # True если проверять баланс
 min_balance = 0.1  # минимальный баланс для проверки
 
-# коэффициент надбавки рандомного газа, указывай 2 числа от 1 до 2
+# коэффициент надбавки рандомного газа, указывай 2 дробных числа между 1 и 2
 gas_coef = [1.1, 1.3]
 
 
