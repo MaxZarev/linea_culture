@@ -121,6 +121,8 @@ class Client:
             for tx in json_response['result']:
                 if tx['to'].lower() == "0xB8DD4f5Aa8AD3fEADc50F9d670644c02a07c9374".lower() and tx['txreceipt_status'] == "1":
                     return True
+        else:
+            raise Exception(f"Can't get data from etherscan: {response.text}")
         return False
 
     def write_result(self):
