@@ -51,6 +51,7 @@ def main():
             time.sleep(random.uniform(*pause))
 
         except Exception as ex:
+            client.write_error()
             logger.error(f"{client.address} error {ex}")
 
 

@@ -134,7 +134,12 @@ class Client:
                 if tx['to'].lower() == self.contract_address.lower() and tx['txreceipt_status'] == "1":
                     return True
         else:
-            raise Exception(f"Can't get data from etherscan: {response.text}")
+            if response.text.__contains__("No transactions found"):
+                logger.warning(f"{self.address} : вероятно на данном кошельке не делали квесты в Linea Culture")
+                return False
+            else:
+                raise Exception(f"Can't get data from etherscan: {response.text}")
+
         return False
 
     def write_result(self) -> None:
@@ -143,6 +148,15 @@ class Client:
         :return: None
         """
         with open(os.path.join("data", "result.txt"), "a") as file:
+            file.write(self.address + "\n")
+
+
+    def write_error(self) -> None:
+        """
+        Записывает адрес кошелька в файл data/error.txt в конце файла
+        :return: None
+        """
+        with open(os.path.join("data", "error.txt"), "a") as file:
             file.write(self.address + "\n")
 
     @abstractmethod
