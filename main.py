@@ -2,10 +2,10 @@ import random
 import time
 
 from config import *
-from classes import Client, Quest_2, Quest_3
+from classes import *
+
 
 def main():
-
     private_keys = Client.get_list_from_file("data/private_keys.txt")
 
     if not private_keys:
@@ -19,10 +19,11 @@ def main():
     if is_shuffle_wallets:
         random.shuffle(private_keys)
 
-    message =("Выбери какой квест запустить?\n"
-              "2. Минт нфт день 2: Crazy Gang\n"
-              "3. Минт нфт день 3: Push\n"
-              "Введите цифру и нажмите Enter\n")
+    message = ("Выбери какой квест запустить?\n"
+               "2. Минт нфт день 2: Crazy Gang\n"
+               "3. Минт нфт день 3: Push\n"
+               "4. Минт нфт день 3: Wizards of Linea\n"
+               "Введите цифру и нажмите Enter\n")
     number_quest = input(message)
 
     if number_quest == "2":
@@ -37,7 +38,7 @@ def main():
     quest = globals().get(f"Quest_{number_quest}")
 
     for private_key in private_keys:
-        client : Client = quest(private_key)
+        client: Client = quest(private_key)
         try:
             logger.info(f"{client.address} start")
             if client.is_minted():
