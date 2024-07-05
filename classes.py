@@ -42,11 +42,12 @@ class Client:
         return contract
 
     def check_balance(self):
-        if is_check_balance:
-            balance = self.w3.eth.get_balance(self.address)
-            if balance < min_balance / 3500 * 10 ** 18:
-                logger.error(f"{self.address} : Not enough balance!")
-                return False
+        balance = self.w3.eth.get_balance(self.address)
+        if balance < min_balance / 3500 * 10 ** 18:
+            logger.error(f"{self.address} : Not enough balance!")
+            return True
+        else:
+            return False
 
     def send_transaction(self, transaction: dict, gas: int = 0) -> HexBytes:
         """
@@ -165,8 +166,10 @@ class Client:
 
     def mint_nft(self) -> bool:
         # проверяем баланс, если нужно
-        if self.check_balance():
-            return False
+
+        if is_check_balance:
+            if self.check_balance():
+                return False
 
         contract = self.get_contract()
 

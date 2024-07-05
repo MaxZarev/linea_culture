@@ -48,8 +48,9 @@ def main():
 
             if client.mint_nft():
                 client.write_result()
-
-            time.sleep(random.uniform(*pause))
+                time.sleep(random.uniform(*pause))
+            else:
+                client.write_error()
 
         except Exception as ex:
             client.write_error()
