@@ -22,7 +22,8 @@ def main():
     message = ("Выбери какой квест запустить?\n"
                "2. Минт нфт день 2: Crazy Gang\n"
                "3. Минт нфт день 3: Push\n"
-               "4. Минт нфт день 3: Wizards of Linea\n"
+               "4. Минт нфт день 4: Wizards of Linea\n"
+               "5. Минт нфт день 5: eFrogs\n"
                "Введите цифру и нажмите Enter\n")
     number_quest = input(message)
 

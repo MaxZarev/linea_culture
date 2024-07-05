@@ -260,3 +260,20 @@ class Quest_4(Client):
 
         return tx
 
+class Quest_5(Client):
+    contract_address = "0xf4AA97cDE2686Bc5ae2Ee934a8E5330B8B13Be64"
+
+    def __init__(self, pk: str):
+        super().__init__(pk)
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mintEfficientN2M_001Z5BWH().build_transaction(self.prepare_transaction(value=value))
+
+        return tx
+
