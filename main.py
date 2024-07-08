@@ -4,9 +4,8 @@ import time
 from config import *
 from classes import *
 
-
 def main():
-    private_keys = Client.get_list_from_file("data/private_keys.txt")
+    private_keys = Client.get_list_from_file("private_keys.txt")
 
     if not private_keys:
         logger.error("No private keys found")
@@ -20,15 +19,16 @@ def main():
         random.shuffle(private_keys)
 
     message = ("Выбери какой квест запустить?\n"
-               "2. Минт нфт день 2: Crazy Gang\n"
-               "3. Минт нфт день 3: Push\n"
-               "4. Минт нфт день 4: Wizards of Linea\n"
-               "5. Минт нфт день 5: eFrogs\n"
-               "Введите цифру и нажмите Enter\n")
+               "2. Минт нфт день 2: W1:Crazy Gang\n"
+               "3. Минт нфт день 3: W1:Push\n"
+               "4. Минт нфт день 4: W1:Wizards of Linea\n"
+               "5. Минт нфт день 5: W1:eFrogs\n"
+               "6. Минт нфт день 6: W2: Satoshi Universe\n"
+               "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 
     if number_quest == "2":
-        urls = Client.get_list_from_file("data/urls.txt")
+        urls = Client.get_list_from_file("urls.txt")
         if not urls:
             logger.error("No urls found")
             return

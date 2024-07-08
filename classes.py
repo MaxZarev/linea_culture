@@ -1,7 +1,6 @@
 import json
 import os
 import random
-from abc import abstractmethod
 
 import requests
 from hexbytes import HexBytes
@@ -22,13 +21,14 @@ class Client:
         self.abi = self.__class__.__name__.lower()
 
     @staticmethod
-    def get_list_from_file(path: str) -> list[str]:
+    def get_list_from_file(file_name: str) -> list[str]:
         """
         Читает файл и возвращает список строк
         :param path: название файла
         :return:
         """
-        with open(path, "r") as file:
+        os_path = os.path.join("data", file_name)
+        with open(os_path, "r") as file:
             return file.read().splitlines()
 
     def get_contract(self) -> Contract:
@@ -151,7 +151,6 @@ class Client:
         with open(os.path.join("data", "result.txt"), "a") as file:
             file.write(self.address + "\n")
 
-
     def write_error(self) -> None:
         """
         Записывает адрес кошелька в файл data/error.txt в конце файла
@@ -160,8 +159,7 @@ class Client:
         with open(os.path.join("data", "error.txt"), "a") as file:
             file.write(self.address + "\n")
 
-    @abstractmethod
-    def build_transaction(self, contract):
+    def build_transaction(self, contract: Contract) -> dict:
         pass
 
     def mint_nft(self) -> bool:
@@ -179,14 +177,13 @@ class Client:
         logger.info(f"{self.address} minted: {tx_hash.hex()}")
         return True
 
-
 class Quest_2(Client):
     contract_address = "0xB8DD4f5Aa8AD3fEADc50F9d670644c02a07c9374"
 
     def __init__(self, pk: str):
         super().__init__(pk)
 
-    def build_transaction(self, contract) -> dict:
+    def build_transaction(self, contract: Contract) -> dict:
         """
         Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
         :param contract: инициализированный контракт
@@ -210,7 +207,6 @@ class Quest_2(Client):
         with open("data/urls.txt", "w") as file:
             file.write("\n".join(urls))
         return url
-
 
 class Quest_3(Client):
     contract_address = "0x3685102bc3D0dd23A88eF8fc084a8235bE929f1c"
@@ -277,3 +273,19 @@ class Quest_5(Client):
 
         return tx
 
+class Quest_6(Client):
+    contract_address = "0xc0A2a606913A49a0B0a02F682C833EFF3829B4bA"
+
+    def __init__(self, pk: str):
+        super().__init__(pk)
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mintEfficientN2M_001Z5BWH().build_transaction(self.prepare_transaction(value=value))
+
+        return tx
