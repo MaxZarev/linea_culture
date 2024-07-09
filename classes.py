@@ -13,6 +13,7 @@ from config import *
 
 class Client:
     contract_address = ""
+    start_block = 6084611
 
     def __init__(self, pk: str):
         self.w3 = Web3(Web3.HTTPProvider(RPC))
@@ -121,7 +122,7 @@ class Client:
                f"?module=account"
                f"&action=txlist"
                f"&address={self.address}"
-               f"&startblock=6084611"
+               f"&startblock={self.start_block}"
                f"&endblock=99999999"
                f"&page=1"
                f"&offset=10000"
@@ -222,18 +223,18 @@ class Quest_3(Client):
         """
         value = self.w3.to_wei(0.0000029, "ether")
         tx = contract.functions.claim(
-            self.address,                                                               # _receiver (address)
-            0,                                                                          # _tokenId (uint256)
-            1,                                                                          # _quantity (uint256)
-            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",                               # _currency (address)
-            0,                                                                          # _pricePerToken (uint256)
-            [                                                                           # _allowlistProof (tuple)
-                ["0x0000000000000000000000000000000000000000000000000000000000000000"],   # proof (bytes32[])
-                2,                                                                      # quantityLimitPerWallet (uint256)
-                0,                                                                      # pricePerToken (uint256)
-                "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"                            # currency (address)
+            self.address,  # _receiver (address)
+            0,  # _tokenId (uint256)
+            1,  # _quantity (uint256)
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",  # _currency (address)
+            0,  # _pricePerToken (uint256)
+            [  # _allowlistProof (tuple)
+                ["0x0000000000000000000000000000000000000000000000000000000000000000"],  # proof (bytes32[])
+                2,  # quantityLimitPerWallet (uint256)
+                0,  # pricePerToken (uint256)
+                "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"  # currency (address)
             ],
-            "0x"                                                                        # _data (bytes)
+            "0x"  # _data (bytes)
 
         ).build_transaction(self.prepare_transaction(value=value))
 
@@ -287,5 +288,31 @@ class Quest_6(Client):
         """
         value = self.w3.to_wei(0, "ether")
         tx = contract.functions.mintEfficientN2M_001Z5BWH().build_transaction(self.prepare_transaction(value=value))
+
+        return tx
+
+
+class Quest_7(Client):
+    contract_address = "0xBcFa22a36E555c507092FF16c1af4cB74B8514C8"
+    start_block = 6563000  # на случай если ранее были минты по данному контракту
+
+    def __init__(self, pk: str):
+        super().__init__(pk)
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.launchpadBuy(
+            "0x0c21cfbb",
+            "0x1ffca9db",
+            0,
+            1,
+            [],
+            "0x"
+        ).build_transaction(self.prepare_transaction(value=value))
 
         return tx

@@ -24,6 +24,7 @@ def main():
                "4. Минт нфт день 4: W1:Wizards of Linea\n"
                "5. Минт нфт день 5: W1:eFrogs\n"
                "6. Минт нфт день 6: W2: Satoshi Universe\n"
+               "7. Минт нфт день 7: W2: Linus\n"
                "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 
