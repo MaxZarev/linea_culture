@@ -13,7 +13,7 @@ from config import *
 
 class Client:
     contract_address = ""
-    start_block = 6084611
+    start_block = 6084611  # на случай если ранее были минты по контракту
 
     def __init__(self, pk: str):
         self.w3 = Web3(Web3.HTTPProvider(RPC))
@@ -137,7 +137,6 @@ class Client:
                     return True
         else:
             if response.text.__contains__("No transactions found"):
-                logger.warning(f"{self.address} : вероятно на данном кошельке не делали квесты в Linea Culture")
                 return False
             else:
                 raise Exception(f"Can't get data from etherscan: {response.text}")
@@ -314,5 +313,23 @@ class Quest_7(Client):
             [],
             "0x"
         ).build_transaction(self.prepare_transaction(value=value))
+
+        return tx
+
+class Quest_8(Client):
+    contract_address = "0xF502AA456C4ACe0D77d55Ad86436F84b088486F1"
+    start_block = 6608000
+
+    def __init__(self, pk: str):
+        super().__init__(pk)
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mint().build_transaction(self.prepare_transaction(value=value))
 
         return tx
