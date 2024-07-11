@@ -333,3 +333,21 @@ class Quest_8(Client):
         tx = contract.functions.mint().build_transaction(self.prepare_transaction(value=value))
 
         return tx
+
+class Quest_9(Client):
+    contract_address = "0x32DeC694570ce8EE6AcA08598DaEeA7A3e0168A3"
+    start_block = 6645000
+
+    def __init__(self, pk: str):
+        super().__init__(pk)
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mintEfficientN2M_001Z5BWH().build_transaction(self.prepare_transaction(value=value))
+
+        return tx
