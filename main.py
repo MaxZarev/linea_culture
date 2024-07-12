@@ -19,14 +19,7 @@ def main():
         random.shuffle(private_keys)
 
     message = ("Выбери какой квест запустить?\n"
-               "2. Минт нфт день 2: W1:Crazy Gang\n"
-               "3. Минт нфт день 3: W1:Push\n"
-               "4. Минт нфт день 4: W1:Wizards of Linea\n"
-               "5. Минт нфт день 5: W1:eFrogs\n"
-               "6. Минт нфт день 6: W2: Satoshi Universe\n"
-               "7. Минт нфт день 7: W2: Linus\n"
-               "8. Минт нфт день 8: W2: Yooldo\n"
-               "9. Минт нфт день 9: W2: Frog Wars\n"
+               "16. Минт нфт: W2: ACG\n"
                "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 
