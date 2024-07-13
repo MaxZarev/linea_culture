@@ -20,6 +20,7 @@ def main():
 
     message = ("Выбери какой квест запустить?\n"
                "16. Минт нфт: W2: ACG\n"
+               "17. Минт нфт: W2: Toad the Great\n"
                "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 
