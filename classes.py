@@ -412,3 +412,22 @@ class Quest_19(Client):
         ).build_transaction(self.prepare_transaction(value=value))
 
         return tx
+
+class Quest_20(Client):
+    contract_address = "0xEaea2Fa0dea2D1191a584CFBB227220822E29086"
+    start_block = 6645000  # на случай если ранее были минты по данному контракту
+
+    def __init__(self, pk: str) -> None:
+        super().__init__(pk)
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mint(
+        ).build_transaction(self.prepare_transaction(value=value))
+
+        return tx
