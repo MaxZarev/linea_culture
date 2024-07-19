@@ -22,6 +22,7 @@ def main():
                "20. Минт нфт: W3: SendingMe\n"
                "21. Минт нфт: W3: Townstory\n"
                "22. Минт нфт: W3: Danielle Zosavac\n"
+               "23. Минт нфт: W3: demmortal\n"
                "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 
