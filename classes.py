@@ -177,6 +177,7 @@ class Client:
         logger.info(f"{self.address} minted: {tx_hash.hex()}")
         return True
 
+
 class Quest_2(Client):
     contract_address = "0xB8DD4f5Aa8AD3fEADc50F9d670644c02a07c9374"
 
@@ -207,6 +208,7 @@ class Quest_2(Client):
         with open("data/urls.txt", "w") as file:
             file.write("\n".join(urls))
         return url
+
 
 class Quest_3(Client):
     contract_address = "0x3685102bc3D0dd23A88eF8fc084a8235bE929f1c"
@@ -239,6 +241,7 @@ class Quest_3(Client):
 
         return tx
 
+
 class Quest_4(Client):
     contract_address = "0xD540038B0B427238984E0341bA49F69CD80DC139"
 
@@ -256,6 +259,7 @@ class Quest_4(Client):
 
         return tx
 
+
 class Quest_5(Client):
     contract_address = "0xf4AA97cDE2686Bc5ae2Ee934a8E5330B8B13Be64"
 
@@ -272,6 +276,7 @@ class Quest_5(Client):
         tx = contract.functions.mintEfficientN2M_001Z5BWH().build_transaction(self.prepare_transaction(value=value))
 
         return tx
+
 
 class Quest_6(Client):
     contract_address = "0xc0A2a606913A49a0B0a02F682C833EFF3829B4bA"
@@ -316,6 +321,7 @@ class Quest_7(Client):
 
         return tx
 
+
 class Quest_8(Client):
     contract_address = "0xF502AA456C4ACe0D77d55Ad86436F84b088486F1"
     start_block = 6608000
@@ -333,6 +339,7 @@ class Quest_8(Client):
         tx = contract.functions.mint().build_transaction(self.prepare_transaction(value=value))
 
         return tx
+
 
 class Quest_9(Client):
     contract_address = "0x32DeC694570ce8EE6AcA08598DaEeA7A3e0168A3"
@@ -352,6 +359,7 @@ class Quest_9(Client):
 
         return tx
 
+
 class Quest_16(Client):
     contract_address = "0x057b0080120d89ae21cc622db34f2d9ae9ff2bde"
     start_block = 6645000  # на случай если ранее были минты по данному контракту
@@ -370,6 +378,7 @@ class Quest_16(Client):
 
         return tx
 
+
 class Quest_17(Client):
     contract_address = "0x0841479e87Ed8cC7374d3E49fF677f0e62f91fa1"
     start_block = 6645000  # на случай если ранее были минты по данному контракту
@@ -387,6 +396,7 @@ class Quest_17(Client):
         tx = contract.functions.mintEfficientN2M_001Z5BWH().build_transaction(self.prepare_transaction(value=value))
 
         return tx
+
 
 class Quest_19(Client):
     contract_address = "0xBcFa22a36E555c507092FF16c1af4cB74B8514C8"
@@ -413,6 +423,7 @@ class Quest_19(Client):
 
         return tx
 
+
 class Quest_20(Client):
     contract_address = "0xEaea2Fa0dea2D1191a584CFBB227220822E29086"
     start_block = 6645000  # на случай если ранее были минты по данному контракту
@@ -431,6 +442,7 @@ class Quest_20(Client):
         ).build_transaction(self.prepare_transaction(value=value))
 
         return tx
+
 
 class Quest_21(Client):
     contract_address = "0x8Ad15e54D37d7d35fCbD62c0f9dE4420e54Df403"
@@ -451,6 +463,7 @@ class Quest_21(Client):
 
         return tx
 
+
 class Quest_22(Client):
     contract_address = "0x3A21e152aC78f3055aA6b23693FB842dEFdE0213"
     start_block = 6645000  # на случай если ранее были минты по данному контракту
@@ -470,6 +483,7 @@ class Quest_22(Client):
 
         return tx
 
+
 class Quest_23(Client):
     contract_address = "0x5A77B45B6f5309b07110fe98E25A178eEe7516c1"
     start_block = 6645000  # на случай если ранее были минты по данному контракту
@@ -488,6 +502,32 @@ class Quest_23(Client):
             self.address,
             0,
             1,
+            "0x"
+        ).build_transaction(self.prepare_transaction(value=value))
+
+        return tx
+
+
+class Quest_24(Client):
+    contract_address = "0xBcFa22a36E555c507092FF16c1af4cB74B8514C8"
+    start_block = 7025000  # на случай если ранее были минты по данному контракту
+
+    def __init__(self, pk: str) -> None:
+        super().__init__(pk)
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.launchpadBuy(
+            "0x0c21cfbb",
+            "0x2968bd75",
+            0,
+            1,
+            [],
             "0x"
         ).build_transaction(self.prepare_transaction(value=value))
 
