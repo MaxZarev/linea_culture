@@ -1,0 +1,32 @@
+name: Notify Telegram on Branch Update
+
+on:
+  push:
+    branches:
+      - 'master'
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Get commit message
+      id: get_commit
+      run: |
+        echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+        echo "COMMIT_DESCRIPTION=$(git log -1 --pretty=format:'%b')" >> $GITHUB_ENV
+
+    - name: Send message to Telegram
+      env:
+        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        THREAD_ID: ${{ secrets.THREAD_ID }}
+        COMMIT_MESSAGE: ${{ env.COMMIT_MESSAGE }}
+        COMMIT_DESCRIPTION: ${{ env.COMMIT_DESCRIPTION }}
+      run: |
+        MESSAGE="""Скрипт обновлен.
+        Message: ${COMMIT_MESSAGE}
+        Description: ${COMMIT_DESCRIPTION}"""
+        curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text="${MESSAGE} message_thread_id="${THREAD_ID}"
