@@ -510,7 +510,7 @@ class Quest_23(Client):
 
 class Quest_24(Client):
     contract_address = "0xBcFa22a36E555c507092FF16c1af4cB74B8514C8"
-    start_block = 7025000  # на случай если ранее были минты по данному контракту
+    start_block = 7025001  # на случай если ранее были минты по данному контракту
 
     def __init__(self, pk: str) -> None:
         super().__init__(pk)
