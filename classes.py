@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import time
 
 import requests
 from hexbytes import HexBytes
@@ -99,6 +100,18 @@ class Client:
         tx_params['maxFeePerGas'] = int(max_fee_per_gas * random.uniform(*gas_coef))
         tx_params['type'] = '0x2'
         return tx_params
+
+    def get_proxy(self):
+        """
+        Получает прокси для конкретного кошелька
+        :return: прокси
+        """
+        proxies = Client.get_list_from_file("proxy.txt")
+        private_keys = Client.get_list_from_file("private_keys.txt")
+
+        for i in range(len(private_keys)):
+            if private_keys[i] == self.pk:
+                return proxies[i]
 
     def get_priority_fee(self) -> int:
         """
@@ -532,3 +545,76 @@ class Quest_24(Client):
         ).build_transaction(self.prepare_transaction(value=value))
 
         return tx
+
+
+class Quest_26(Client):
+    contract_address = "0xAd626D0F8BE64076C4c27a583e3df3878874467E"
+    start_block = 7025001  # на случай если ранее были минты по данному контракту
+
+    def __init__(self, pk: str) -> None:
+        super().__init__(pk)
+        self.proxy = self.get_proxy()
+
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+        from faker import Faker
+        payload = {
+            "buyer": {"eth_address": self.address},
+            "listing_id": "fceb2be9-f9fd-458a-8952-9a0a6f873aff",
+            "provider": "MINT_VOUCHER",
+            "quantity": 1
+        }
+        ip, port, user, password = self.proxy.split(":")
+        proxies = {
+            "http": 'http://' + user + ':' + password + '@' + ip + ':' + port,
+            "https": 'http://' + user + ':' + password + '@' + ip + ':' + port,
+        }
+        fake = Faker()
+        user_agent = fake.user_agent()
+
+        headers = {
+            "Content-Type": 'application/json',
+            'User-Agent': user_agent,
+        }
+
+        for _ in range(100):
+            response = requests.post(
+                "https://public-api.phosphor.xyz/v1/purchase-intents",
+                json=payload,
+                proxies=proxies,
+                headers=headers
+            )
+            if response.status_code == 201:
+                break
+            time.sleep(random.randint(5, 10))
+        else:
+            raise Exception(f"Can't get data from phosphor: {response.text}")
+
+        data = response.json()
+        expiry = data['data']['voucher']['expiry']
+        nonce = data['data']['voucher']['nonce']
+        signature = data['data']['signature']
+        voucher = ("0x0000000000000000000000000000000000000000",
+                   "0x0000000000000000000000000000000000000000",
+                   0,
+                   1,
+                   int(nonce),
+                   int(expiry),
+                   0,
+                   1,
+                   "0x0000000000000000000000000000000000000000")
+
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mintWithVoucher(
+            voucher,
+            signature
+        ).build_transaction(self.prepare_transaction(value=value))
+
+        return tx
+
+

@@ -5,6 +5,10 @@ from config import *
 from classes import *
 
 def main():
+    logger.warning("Внимание!!! Обратите внимание для 26 квеста нужно заполнить \n"
+                   "файл proxy.txt в папке data в формате ip:port:login:password\n"
+                   "количество прокси = количество кошельков\n")
+    time.sleep(5)
     private_keys = Client.get_list_from_file("private_keys.txt")
 
     if not private_keys:
@@ -24,17 +28,19 @@ def main():
                "22. Минт нфт: W3: Danielle Zosavac\n"
                "23. Минт нфт: W3: demmortal\n"
                "24. Минт нфт: W3: foxy\n"
+               "26. Минт нфт: w4: coop-records\n"
                "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 
-    if number_quest == "2":
-        urls = Client.get_list_from_file("urls.txt")
+    if number_quest == "26":
+        urls = Client.get_list_from_file("proxy.txt")
         if not urls:
-            logger.error("No urls found")
+            logger.error("Добавьте список прокси в файл proxy.txt для квеста 26")
             return
         if len(private_keys) > len(urls):
-            logger.error("Добавьте больше ссылок на картинки")
+            logger.error("Добавьте больше прокси в файл proxy.txt для квеста 26")
             return
+
 
     quest = globals().get(f"Quest_{number_quest}")
 
