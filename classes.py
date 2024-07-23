@@ -4,6 +4,7 @@ import random
 import time
 
 import requests
+from faker import Faker
 from hexbytes import HexBytes
 from web3 import Web3
 from web3.contract import Contract
@@ -15,6 +16,7 @@ from config import *
 class Client:
     contract_address = ""
     start_block = 6084611  # на случай если ранее были минты по контракту
+    proxy: str = None
 
     def __init__(self, pk: str):
         self.w3 = Web3(Web3.HTTPProvider(RPC))
@@ -189,6 +191,60 @@ class Client:
         tx_hash = self.send_transaction(tx)
         logger.info(f"{self.address} minted: {tx_hash.hex()}")
         return True
+
+    def get_tx_data_from_phosphor(self, listing_id: str) -> tuple[str, tuple]:
+        """
+        Получает данные для транзакции из Phosphor
+        :param listing_id: id листинга
+        :return: кортеж с подписью и ваучером
+        """
+        payload = {
+            "buyer": {"eth_address": self.address},
+            "listing_id": listing_id,
+            "provider": "MINT_VOUCHER",
+            "quantity": 1
+        }
+        ip, port, user, password = self.proxy.split(":")
+        proxies = {
+            "http": 'http://' + user + ':' + password + '@' + ip + ':' + port,
+            "https": 'http://' + user + ':' + password + '@' + ip + ':' + port,
+        }
+        fake = Faker()
+        user_agent = fake.user_agent()
+
+        headers = {
+            "Content-Type": 'application/json',
+            'User-Agent': user_agent,
+        }
+
+        for _ in range(100):
+            response = requests.post(
+                "https://public-api.phosphor.xyz/v1/purchase-intents",
+                json=payload,
+                proxies=proxies,
+                headers=headers
+            )
+            if response.status_code == 201:
+                break
+            logger.warning(f"Failed to send request: {response.text}")
+            time.sleep(random.randint(10, 20))
+        else:
+            raise Exception("Can't send request")
+
+        data = response.json()
+        expiry = data['data']['voucher']['expiry']
+        nonce = data['data']['voucher']['nonce']
+        signature = data['data']['signature']
+        voucher = ("0x0000000000000000000000000000000000000000",
+                   "0x0000000000000000000000000000000000000000",
+                   0,
+                   1,
+                   int(nonce),
+                   int(expiry),
+                   0,
+                   1,
+                   "0x0000000000000000000000000000000000000000")
+        return signature, voucher
 
 
 class Quest_2(Client):
@@ -562,52 +618,34 @@ class Quest_26(Client):
         :param contract: инициализированный контракт
         :return: словарь с параметрами транзакции
         """
-        from faker import Faker
-        payload = {
-            "buyer": {"eth_address": self.address},
-            "listing_id": "fceb2be9-f9fd-458a-8952-9a0a6f873aff",
-            "provider": "MINT_VOUCHER",
-            "quantity": 1
-        }
-        ip, port, user, password = self.proxy.split(":")
-        proxies = {
-            "http": 'http://' + user + ':' + password + '@' + ip + ':' + port,
-            "https": 'http://' + user + ':' + password + '@' + ip + ':' + port,
-        }
-        fake = Faker()
-        user_agent = fake.user_agent()
 
-        headers = {
-            "Content-Type": 'application/json',
-            'User-Agent': user_agent,
-        }
+        signature, voucher = self.get_tx_data_from_phosphor("fceb2be9-f9fd-458a-8952-9a0a6f873aff")
 
-        for _ in range(100):
-            response = requests.post(
-                "https://public-api.phosphor.xyz/v1/purchase-intents",
-                json=payload,
-                proxies=proxies,
-                headers=headers
-            )
-            if response.status_code == 201:
-                break
-            time.sleep(random.randint(5, 10))
-        else:
-            raise Exception(f"Can't get data from phosphor: {response.text}")
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mintWithVoucher(
+            voucher,
+            signature
+        ).build_transaction(self.prepare_transaction(value=value))
 
-        data = response.json()
-        expiry = data['data']['voucher']['expiry']
-        nonce = data['data']['voucher']['nonce']
-        signature = data['data']['signature']
-        voucher = ("0x0000000000000000000000000000000000000000",
-                   "0x0000000000000000000000000000000000000000",
-                   0,
-                   1,
-                   int(nonce),
-                   int(expiry),
-                   0,
-                   1,
-                   "0x0000000000000000000000000000000000000000")
+        return tx
+
+class Quest_27(Client):
+    contract_address = "0x3f0A935c8f3Eb7F9112b54bD3b7fd19237E441Ee"
+    start_block = 7025001  # на случай если ранее были минты по данному контракту
+
+    def __init__(self, pk: str) -> None:
+        super().__init__(pk)
+        self.proxy = self.get_proxy()
+
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+
+        signature, voucher = self.get_tx_data_from_phosphor("849e42a7-45dd-4a5b-a895-f5496e46ade2")
 
         value = self.w3.to_wei(0, "ether")
         tx = contract.functions.mintWithVoucher(
