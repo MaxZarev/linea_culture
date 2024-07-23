@@ -29,6 +29,7 @@ def main():
                "23. Минт нфт: W3: demmortal\n"
                "24. Минт нфт: W3: foxy\n"
                "26. Минт нфт: w4: coop-records\n"
+               "27. Минт нфт: w4: borja-moskv\n"
                "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 
