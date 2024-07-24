@@ -5,7 +5,7 @@ from config import *
 from classes import *
 
 def main():
-    logger.warning("Внимание!!! Обратите внимание для 26 квеста нужно заполнить \n"
+    logger.warning("Внимание!!! Обратите внимание для 26, 27, 28 квеста нужно заполнить \n"
                    "файл proxy.txt в папке data в формате ip:port:login:password\n"
                    "количество прокси = количество кошельков\n")
     time.sleep(5)
@@ -30,6 +30,7 @@ def main():
                "24. Минт нфт: W3: foxy\n"
                "26. Минт нфт: w4: coop-records\n"
                "27. Минт нфт: w4: borja-moskv\n"
+               "28. Минт нфт: w4: forbidden-fruit\n"
                "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 

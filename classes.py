@@ -234,6 +234,7 @@ class Client:
         data = response.json()
         expiry = data['data']['voucher']['expiry']
         nonce = data['data']['voucher']['nonce']
+        token_id = data['data']['voucher']['token_id']
         signature = data['data']['signature']
         voucher = ("0x0000000000000000000000000000000000000000",
                    "0x0000000000000000000000000000000000000000",
@@ -242,7 +243,7 @@ class Client:
                    int(nonce),
                    int(expiry),
                    0,
-                   1,
+                   int(token_id),
                    "0x0000000000000000000000000000000000000000")
         return signature, voucher
 
@@ -655,4 +656,28 @@ class Quest_27(Client):
 
         return tx
 
+class Quest_28(Client):
+    contract_address = "0x3EB78e881b28B71329344dF622Ea3A682538EC6a"
+    start_block = 7025001  # на случай если ранее были минты по данному контракту
 
+    def __init__(self, pk: str) -> None:
+        super().__init__(pk)
+        self.proxy = self.get_proxy()
+
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+
+        signature, voucher = self.get_tx_data_from_phosphor("3d595f3e-6609-405f-ba3c-d1e28381f11a")
+
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mintWithVoucher(
+            voucher,
+            signature
+        ).build_transaction(self.prepare_transaction(value=value))
+
+        return tx
