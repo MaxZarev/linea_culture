@@ -707,3 +707,29 @@ class Quest_29(Client):
         ).build_transaction(self.prepare_transaction(value=value))
 
         return tx
+
+class Quest_30(Client):
+    contract_address = "0x3EB78e881b28B71329344dF622Ea3A682538EC6a"
+    start_block = 7298102  # на случай если ранее были минты по данному контракту
+
+    def __init__(self, pk: str) -> None:
+        super().__init__(pk)
+        self.proxy = self.get_proxy()
+
+
+    def build_transaction(self, contract) -> dict:
+        """
+        Реализация абстрактного метода, строит транзакцию для конкретного минта NFT
+        :param contract: инициализированный контракт
+        :return: словарь с параметрами транзакции
+        """
+
+        signature, voucher = self.get_tx_data_from_phosphor("3c23e064-486d-46c5-8675-eabbc2e7d15e")
+
+        value = self.w3.to_wei(0, "ether")
+        tx = contract.functions.mintWithVoucher(
+            voucher,
+            signature
+        ).build_transaction(self.prepare_transaction(value=value))
+
+        return tx
