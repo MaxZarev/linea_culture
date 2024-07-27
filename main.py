@@ -33,6 +33,7 @@ def main():
                "28. Минт нфт: w4: forbidden-fruit\n"
                "29. Минт нфт: w4: forbidden-fruit-crux\n"
                "30. Минт нфт: w4-forbidden-fruit-stonez-the-organic\n"
+               "31. Минт нфт: w4-adelaide-laurent-bellue\n"
                "Введите номер квеста и нажмите Enter\n")
     number_quest = input(message)
 
